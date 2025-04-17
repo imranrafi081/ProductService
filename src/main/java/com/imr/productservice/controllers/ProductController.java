@@ -1,5 +1,6 @@
 package com.imr.productservice.controllers;
 
+import com.imr.productservice.dtos.CreateFakeStoreProductDTO;
 import com.imr.productservice.dtos.ProductResponseDTO;
 import com.imr.productservice.models.Product;
 import com.imr.productservice.services.FakeStoreService;
@@ -15,12 +16,14 @@ import java.util.List;
 @RestController
 public class ProductController {
 
+    //private final FakeStoreService fakeStoreService;
     RestTemplate restTemplate ;
     ProductService productService ;
 
-    public ProductController(RestTemplate restTemplate, @Qualifier("productDBService") ProductService productService) {
+    public ProductController(RestTemplate restTemplate, @Qualifier("productDBService") ProductService productService, FakeStoreService fakeStoreService) {
         this.restTemplate =restTemplate;
         this.productService = productService;
+        //this.fakeStoreService = fakeStoreService;
     }
 
     @RequestMapping(value = "/products/{id}" ,method= RequestMethod.GET)
@@ -39,5 +42,16 @@ public class ProductController {
             responseDTOs.add(responseDTO);
         }
         return responseDTOs;
+    }
+
+    @PostMapping("/products")
+    public  ProductResponseDTO createProduct(@RequestBody CreateFakeStoreProductDTO createFakeStoreProductDTO) {
+        Product product = productService.createProduct(createFakeStoreProductDTO.getName(),
+                                                            createFakeStoreProductDTO.getDescription(),
+                                                            createFakeStoreProductDTO.getPrice(),
+                                                            createFakeStoreProductDTO.getImageUrl(),
+                                                            createFakeStoreProductDTO.getCategory());
+        ProductResponseDTO responseDTO = ProductResponseDTO.from(product);
+        return responseDTO;
     }
 }

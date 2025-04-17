@@ -1,5 +1,7 @@
 package com.imr.productservice.services;
 
+import com.imr.productservice.dtos.CreateFakeStoreProductDTO;
+import com.imr.productservice.dtos.FakeProductRequestDTO;
 import com.imr.productservice.dtos.FakeProductResponseDTO;
 import com.imr.productservice.dtos.ProductResponseDTO;
 import com.imr.productservice.models.Product;
@@ -30,5 +32,19 @@ public class FakeStoreService implements ProductService {
             products.add(product);
         }
         return products;
+    }
+
+    @Override
+    public Product createProduct(String name, String description,double price,String imageUrl, String category) {
+        FakeProductRequestDTO fakeProductRequestDTO = new FakeProductRequestDTO();
+        fakeProductRequestDTO.setTitle(name);
+        fakeProductRequestDTO.setDescription(description);
+        fakeProductRequestDTO.setPrice(price);
+        fakeProductRequestDTO.setImage(imageUrl);
+        fakeProductRequestDTO.setCategory(category);
+
+        FakeProductResponseDTO responseDTO = restTemplate.postForObject("https://fakestoreapi.com/products", fakeProductRequestDTO, FakeProductResponseDTO.class);
+
+        return responseDTO.toProduct();
     }
 }
