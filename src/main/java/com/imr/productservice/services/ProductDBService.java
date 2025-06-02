@@ -20,12 +20,12 @@ public class ProductDBService implements ProductService {
     }
     @Override
     public Product getProductById(long id) {
-        return null;
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<Product> getAllProducts() {
-        return List.of();
+        return productRepository.findAll();
     }
 
     @Override
